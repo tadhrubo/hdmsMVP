@@ -62,7 +62,7 @@ export function NewProjectDialog() {
 
       {open && (
         <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && setOpen(false)}>
-          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="new-project-title">
+          <div className="modal w-[95vw] sm:max-w-[500px]" role="dialog" aria-modal="true" aria-labelledby="new-project-title">
             <div className="modal-header">
               <div>
                 <div className="modal-title" id="new-project-title">New Project</div>
@@ -76,7 +76,7 @@ export function NewProjectDialog() {
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="modal-body">
+              <div className="modal-body max-h-[75vh] overflow-y-auto">
                 <div className="form-group">
                   <label htmlFor="proj-name">Project Name *</label>
                   <input
@@ -89,7 +89,7 @@ export function NewProjectDialog() {
                   />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="form-group">
                     <label htmlFor="proj-code">Project Code *</label>
                     <input

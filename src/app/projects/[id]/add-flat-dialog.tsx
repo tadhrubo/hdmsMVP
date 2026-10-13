@@ -49,7 +49,7 @@ export function AddFlatDialog({ buildingId, buildingName }: Props) {
 
       {open && (
         <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && setOpen(false)}>
-          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="add-flat-title">
+          <div className="modal w-[95vw] sm:max-w-[480px]" role="dialog" aria-modal="true" aria-labelledby="add-flat-title">
             <div className="modal-header">
               <div>
                 <div className="modal-title" id="add-flat-title">Add Flat</div>
@@ -63,7 +63,7 @@ export function AddFlatDialog({ buildingId, buildingName }: Props) {
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="modal-body">
+              <div className="modal-body max-h-[75vh] overflow-y-auto">
                 <div className="form-group">
                   <label htmlFor="flat-number">Flat Number *</label>
                   <input
@@ -75,7 +75,7 @@ export function AddFlatDialog({ buildingId, buildingName }: Props) {
                     onChange={handleChange}
                   />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="form-group">
                     <label htmlFor="flat-size">Size (SqFt) *</label>
                     <input

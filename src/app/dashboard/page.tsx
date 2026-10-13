@@ -112,13 +112,7 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-              gap: 16,
-            }}
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Total Sales Value */}
             <Card style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
               <CardHeader style={{ padding: '18px 20px 4px' }}>
@@ -263,13 +257,7 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: 16,
-            }}
-          >
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {/* Total Projects */}
             <Card style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
               <CardHeader style={{ padding: '16px 18px 2px' }}>
@@ -378,13 +366,7 @@ export default async function DashboardPage() {
             </span>
           </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: 16,
-            }}
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Construction Expense */}
             <Card style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
               <CardHeader style={{ padding: '18px 20px 4px' }}>
@@ -439,13 +421,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* ── Section 4: Operational Panels ── */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 20,
-          }}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Quick Management Links */}
           <div className="panel">
             <div className="panel-header">

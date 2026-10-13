@@ -56,7 +56,7 @@ export default async function ClientsPage() {
             </div>
           </div>
         ) : (
-          <div className="data-table-wrapper">
+          <div className="data-table-wrapper w-full overflow-x-auto">
             <table>
               <thead>
                 <tr>

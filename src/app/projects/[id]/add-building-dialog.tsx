@@ -49,7 +49,7 @@ export function AddBuildingDialog({ projectId }: Props) {
 
       {open && (
         <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && setOpen(false)}>
-          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="add-building-title">
+          <div className="modal w-[95vw] sm:max-w-[480px]" role="dialog" aria-modal="true" aria-labelledby="add-building-title">
             <div className="modal-header">
               <div>
                 <div className="modal-title" id="add-building-title">Add Building</div>
@@ -63,7 +63,7 @@ export function AddBuildingDialog({ projectId }: Props) {
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="modal-body">
+              <div className="modal-body max-h-[75vh] overflow-y-auto">
                 <div className="form-group">
                   <label htmlFor="bld-name">Building Name *</label>
                   <input

@@ -198,7 +198,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                     </p>
                   </div>
                 ) : (
-                  <div style={{ overflowX: 'auto' }}>
+                  <div className="w-full overflow-x-auto">
                     <table>
                       <thead>
                         <tr>

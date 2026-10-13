@@ -1,8 +1,18 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { Menu } from 'lucide-react'
 import { ThemeToggle } from './theme-toggle'
+import { Button } from '@/components/ui/button'
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 
 const NAV = [
   {
@@ -65,11 +75,11 @@ const NAV = [
   },
 ]
 
-export function Sidebar() {
+export function SidebarNavContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname()
 
   return (
-    <aside className="sidebar">
+    <div className="flex flex-col h-full">
       <div className="sidebar-logo">
         <div className="sidebar-logo-mark">
           <div className="sidebar-logo-icon">
@@ -100,7 +110,9 @@ export function Sidebar() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  prefetch={true}
                   className={`nav-link${isActive ? ' active' : ''}`}
+                  onClick={() => onNavigate?.()}
                 >
                   {item.icon}
                   {item.label}
@@ -132,6 +144,68 @@ export function Sidebar() {
         </span>
         <ThemeToggle />
       </div>
+    </div>
+  )
+}
+
+export function Sidebar() {
+  return (
+    <aside className="sidebar hidden md:flex">
+      <SidebarNavContent />
     </aside>
+  )
+}
+
+export function MobileHeader() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <header
+      className="flex md:hidden items-center justify-between px-4 py-3 border-b border-border bg-[var(--color-surface)] sticky top-0 z-40"
+      id="mobile-header"
+    >
+      <div className="flex items-center gap-3">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Open navigation menu"
+                className="size-8 -ml-1 text-muted-foreground hover:text-foreground"
+                id="mobile-menu-trigger"
+              />
+            }
+          >
+            <Menu className="size-5" />
+          </SheetTrigger>
+          <SheetContent
+            side="left"
+            className="p-0 w-[270px] bg-[var(--color-surface)] border-r border-border"
+          >
+            <SheetHeader className="sr-only">
+              <SheetTitle>Navigation Menu</SheetTitle>
+            </SheetHeader>
+            <div className="h-full">
+              <SidebarNavContent onNavigate={() => setOpen(false)} />
+            </div>
+          </SheetContent>
+        </Sheet>
+
+        <Link href="/dashboard" prefetch={true} className="flex items-center gap-2 text-inherit no-underline">
+          <div className="sidebar-logo-icon" style={{ width: 22, height: 22 }}>
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+              <rect x="1" y="1" width="5" height="5" rx="0.5" fill="white" opacity="0.9"/>
+              <rect x="8" y="1" width="5" height="5" rx="0.5" fill="white" opacity="0.6"/>
+              <rect x="1" y="8" width="5" height="5" rx="0.5" fill="white" opacity="0.6"/>
+              <rect x="8" y="8" width="5" height="5" rx="0.5" fill="white" opacity="0.9"/>
+            </svg>
+          </div>
+          <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: '-0.01em' }}>HDMS</span>
+        </Link>
+      </div>
+
+      <ThemeToggle />
+    </header>
   )
 }

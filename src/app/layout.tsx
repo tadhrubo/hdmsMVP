@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import { Sidebar } from '@/components/sidebar'
+import { MobileHeader, Sidebar } from '@/components/sidebar'
 import { ToastProvider } from '@/components/toast-provider'
 import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
@@ -26,9 +26,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <ToastProvider>
-            <div className="app-shell">
+            <div className="app-shell flex flex-col md:flex-row min-h-screen">
+              <MobileHeader />
               <Sidebar />
-              <main className="main-content">{children}</main>
+              <main className="main-content flex-1 min-w-0">{children}</main>
             </div>
           </ToastProvider>
         </ThemeProvider>

@@ -125,7 +125,7 @@ export function BookFlatDialog({ flat, buildingName, projectName, initialClients
 
       {open && (
         <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && handleClose()}>
-          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="book-flat-title" style={{ maxWidth: 520 }}>
+          <div className="modal w-[95vw] sm:max-w-[520px]" role="dialog" aria-modal="true" aria-labelledby="book-flat-title">
             <div className="modal-header">
               <div>
                 <div className="modal-title" id="book-flat-title">Book Flat {flat.flat_number}</div>
@@ -141,7 +141,7 @@ export function BookFlatDialog({ flat, buildingName, projectName, initialClients
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="modal-body" style={{ maxHeight: '72vh', overflowY: 'auto' }}>
+              <div className="modal-body max-h-[75vh] overflow-y-auto">
                 {/* Client selector */}
                 <div className="form-group">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -181,7 +181,7 @@ export function BookFlatDialog({ flat, buildingName, projectName, initialClients
                 </div>
 
                 {/* Agreement Date & Total Price */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="form-group">
                     <label htmlFor="booking-date">Agreement Date *</label>
                     <input
@@ -207,7 +207,7 @@ export function BookFlatDialog({ flat, buildingName, projectName, initialClients
                 </div>
 
                 {/* Down payment & Method */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="form-group">
                     <label htmlFor="booking-downpayment">Down Payment (৳ BDT) *</label>
                     <input
