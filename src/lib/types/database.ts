@@ -1,11 +1,28 @@
 // ============================================================
 // HDMS MVP — Database Type Definitions
-// Auto-aligned with schema_migration.sql
+// Auto-aligned with schema_migration.sql & 20261014_land_owners_and_rbac.sql
 // ============================================================
 
 export type FlatStatus = 'Available' | 'Reserved' | 'Sold' | 'Handed Over'
 export type PaymentMethod = 'Cash' | 'Bank' | 'Cheque'
 export type ProjectStatus = 'Planning' | 'Under Construction' | 'Completed' | 'On Hold'
+export type UserRole = 'Owner' | 'Employee'
+
+export interface Profile {
+  id: string
+  email: string
+  role: UserRole
+  created_at: string
+}
+
+export interface LandOwner {
+  id: string
+  project_id: string
+  full_name: string
+  phone: string
+  agreement_file_url: string | null
+  created_at: string
+}
 
 export interface Project {
   id: string
@@ -93,6 +110,16 @@ export interface PaymentWithBooking extends Payment {
 export interface Database {
   public: {
     Tables: {
+      profiles: {
+        Row: Profile
+        Insert: Omit<Profile, 'created_at'>
+        Update: Partial<Omit<Profile, 'id' | 'created_at'>>
+      }
+      land_owners: {
+        Row: LandOwner
+        Insert: Omit<LandOwner, 'id' | 'created_at'>
+        Update: Partial<Omit<LandOwner, 'id' | 'created_at'>>
+      }
       projects: {
         Row: Project
         Insert: Omit<Project, 'id' | 'created_at' | 'updated_at'>
@@ -128,6 +155,7 @@ export interface Database {
       flat_status: FlatStatus
       payment_method: PaymentMethod
       project_status: ProjectStatus
+      user_role: UserRole
     }
   }
 }

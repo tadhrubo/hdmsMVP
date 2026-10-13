@@ -5,7 +5,17 @@ import { createClient } from '@/lib/supabase/server'
 import { AddBuildingDialog } from './add-building-dialog'
 import { AddFlatDialog } from './add-flat-dialog'
 import { BookFlatDialog } from './book-flat-dialog'
-import type { Building, Client, Flat, FlatStatus, Project, ProjectStatus } from '@/lib/types/database'
+import { AddLandOwnerDialog } from './add-land-owner-dialog'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { FileText, ExternalLink } from 'lucide-react'
+import type { Building, Client, Flat, FlatStatus, LandOwner, Project, ProjectStatus } from '@/lib/types/database'
 
 export const instant = false
 
@@ -48,7 +58,12 @@ export default async function ProjectDetailPage({ params }: Props) {
   const { id } = await params
   const supabase = await createClient()
 
-  const [{ data: project, error: projError }, { data: buildings }, { data: clientsData }] = await Promise.all([
+  const [
+    { data: project, error: projError },
+    { data: buildings },
+    { data: clientsData },
+    { data: landOwnersData },
+  ] = await Promise.all([
     supabase.from('projects').select('*').eq('id', id).single(),
     supabase
       .from('buildings')
@@ -59,6 +74,11 @@ export default async function ProjectDetailPage({ params }: Props) {
       .from('clients')
       .select('*')
       .order('full_name', { ascending: true }),
+    supabase
+      .from('land_owners')
+      .select('*')
+      .eq('project_id', id)
+      .order('created_at', { ascending: false }),
   ])
 
   if (projError || !project) notFound()
@@ -66,6 +86,7 @@ export default async function ProjectDetailPage({ params }: Props) {
   const proj = project as Project
   const bldgs = (buildings as BuildingWithFlats[]) ?? []
   const clients = (clientsData as Client[]) ?? []
+  const landOwners = (landOwnersData as LandOwner[]) ?? []
 
   // Compute summary stats
   const totalFlats = bldgs.reduce((s, b) => s + b.flats.length, 0)
@@ -154,6 +175,72 @@ export default async function ProjectDetailPage({ params }: Props) {
             <div className="stat-label">Sold</div>
             <div className="stat-value mono" style={{ color: 'var(--color-danger)' }}>{soldFlats}</div>
           </div>
+        </div>
+
+        {/* ── Land Owners Section ── */}
+        <div className="panel" style={{ marginBottom: 32 }}>
+          <div className="panel-header">
+            <div>
+              <h3 style={{ marginBottom: 1 }}>Land Owners</h3>
+              <span className="text-muted text-tiny">
+                {landOwners.length} {landOwners.length === 1 ? 'owner' : 'owners'} · Deed and joint development agreement holders
+              </span>
+            </div>
+            <AddLandOwnerDialog projectId={proj.id} projectName={proj.name} />
+          </div>
+
+          {landOwners.length === 0 ? (
+            <div className="panel-body">
+              <p className="text-muted text-tiny" style={{ textAlign: 'center', padding: '18px 0' }}>
+                No land owners recorded for this project yet. Click &quot;Add Land Owner&quot; to attach agreements and deeds.
+              </p>
+            </div>
+          ) : (
+            <div className="w-full overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Land Owner</TableHead>
+                    <TableHead>Phone</TableHead>
+                    <TableHead>Agreement / Deed</TableHead>
+                    <TableHead style={{ textAlign: 'right' }}>Date Recorded</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {landOwners.map((owner) => (
+                    <TableRow key={owner.id}>
+                      <TableCell style={{ fontWeight: 600 }}>{owner.full_name}</TableCell>
+                      <TableCell className="mono">{owner.phone}</TableCell>
+                      <TableCell>
+                        {owner.agreement_file_url ? (
+                          <a
+                            href={owner.agreement_file_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-xs font-medium text-foreground hover:underline"
+                            id={`lo-agreement-${owner.id}`}
+                          >
+                            <FileText className="size-3.5 text-muted-foreground" />
+                            View Agreement
+                            <ExternalLink className="size-3 text-muted-foreground" />
+                          </a>
+                        ) : (
+                          <span className="text-muted text-tiny">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell style={{ textAlign: 'right' }} className="mono text-tiny text-muted">
+                        {new Date(owner.created_at).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric',
+                        })}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </div>
 
         {/* ── Buildings ── */}

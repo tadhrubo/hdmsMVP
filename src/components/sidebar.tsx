@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu } from 'lucide-react'
 import { ThemeToggle } from './theme-toggle'
+import { useAuth } from './auth-provider'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -77,6 +78,7 @@ const NAV = [
 
 export function SidebarNavContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname()
+  const { currentRole, setCurrentRole } = useAuth()
 
   return (
     <div className="flex flex-col h-full">
@@ -129,20 +131,93 @@ export function SidebarNavContent({ onNavigate }: { onNavigate?: () => void }) {
           padding: '12px 16px',
           borderTop: '1px solid var(--color-border)',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          flexDirection: 'column',
+          gap: 10,
         }}
       >
-        <span
+        {/* ── Demo Role Switcher ── */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span
+            style={{
+              fontSize: '11px',
+              fontWeight: 600,
+              color: 'var(--color-ink-secondary)',
+            }}
+          >
+            Demo Role
+          </span>
+          <div
+            style={{
+              display: 'inline-flex',
+              padding: '2px',
+              borderRadius: '6px',
+              border: '1px solid var(--color-border)',
+              background: 'var(--color-canvas)',
+              gap: '2px',
+            }}
+          >
+            <button
+              type="button"
+              id="role-switch-owner"
+              onClick={() => setCurrentRole('Owner')}
+              style={{
+                fontSize: '11px',
+                fontWeight: currentRole === 'Owner' ? 600 : 500,
+                padding: '2px 8px',
+                borderRadius: '4px',
+                border: 'none',
+                cursor: 'pointer',
+                background: currentRole === 'Owner' ? 'var(--color-surface)' : 'transparent',
+                color: currentRole === 'Owner' ? 'var(--color-ink)' : 'var(--color-ink-tertiary)',
+                boxShadow: currentRole === 'Owner' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              Owner
+            </button>
+            <button
+              type="button"
+              id="role-switch-employee"
+              onClick={() => setCurrentRole('Employee')}
+              style={{
+                fontSize: '11px',
+                fontWeight: currentRole === 'Employee' ? 600 : 500,
+                padding: '2px 8px',
+                borderRadius: '4px',
+                border: 'none',
+                cursor: 'pointer',
+                background: currentRole === 'Employee' ? 'var(--color-surface)' : 'transparent',
+                color: currentRole === 'Employee' ? 'var(--color-ink)' : 'var(--color-ink-tertiary)',
+                boxShadow: currentRole === 'Employee' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              Employee
+            </button>
+          </div>
+        </div>
+
+        {/* ── App Version & Theme Toggle ── */}
+        <div
           style={{
-            fontSize: '11px',
-            color: 'var(--color-ink-tertiary)',
-            fontWeight: 500,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingTop: '6px',
+            borderTop: '1px solid var(--color-border-subtle)',
           }}
         >
-          MVP v0.1.0
-        </span>
-        <ThemeToggle />
+          <span
+            style={{
+              fontSize: '11px',
+              color: 'var(--color-ink-tertiary)',
+              fontWeight: 500,
+            }}
+          >
+            MVP v0.1.0
+          </span>
+          <ThemeToggle />
+        </div>
       </div>
     </div>
   )

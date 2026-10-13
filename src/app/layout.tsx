@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { MobileHeader, Sidebar } from '@/components/sidebar'
 import { ToastProvider } from '@/components/toast-provider'
 import { ThemeProvider } from '@/components/theme-provider'
+import { AuthProvider } from '@/components/auth-provider'
 import './globals.css'
 
 const geistSans = Geist({
@@ -25,13 +26,15 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <ToastProvider>
-            <div className="app-shell flex flex-col md:flex-row min-h-screen">
-              <MobileHeader />
-              <Sidebar />
-              <main className="main-content flex-1 min-w-0">{children}</main>
-            </div>
-          </ToastProvider>
+          <AuthProvider>
+            <ToastProvider>
+              <div className="app-shell flex flex-col md:flex-row min-h-screen">
+                <MobileHeader />
+                <Sidebar />
+                <main className="main-content flex-1 min-w-0">{children}</main>
+              </div>
+            </ToastProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
