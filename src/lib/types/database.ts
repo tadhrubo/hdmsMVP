@@ -20,6 +20,9 @@ export interface LandOwner {
   project_id: string
   full_name: string
   phone: string
+  nid: string | null
+  email: string | null
+  address: string | null
   agreement_file_url: string | null
   created_at: string
 }
@@ -104,6 +107,10 @@ export interface BookingWithDetails extends Booking {
 
 export interface PaymentWithBooking extends Payment {
   bookings: BookingWithDetails
+}
+
+export interface LandOwnerWithProject extends LandOwner {
+  projects: Project
 }
 
 // ─── Supabase Database Type Map ───────────────────────────────

@@ -10,7 +10,7 @@ import {
   CardContent,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Download, Lock, ShieldCheck, Printer } from 'lucide-react'
+import { Download, Lock } from 'lucide-react'
 
 interface DashboardMetricsProps {
   totalSalesValue: number
@@ -23,6 +23,7 @@ interface DashboardMetricsProps {
   isProfitable: boolean
   totalProjects: number
   totalBuildings: number
+  totalLandOwners: number
   totalFlats: number
   soldFlats: number
   availableFlats: number
@@ -38,10 +39,6 @@ function formatBDT(amount: number) {
   return `${isNegative ? '- ' : ''}৳ ${formatted}`
 }
 
-function formatNumber(num: number) {
-  return num.toLocaleString('en-IN')
-}
-
 export function DashboardMetrics({
   totalSalesValue,
   totalCollected,
@@ -53,6 +50,7 @@ export function DashboardMetrics({
   isProfitable,
   totalProjects,
   totalBuildings,
+  totalLandOwners,
   totalFlats,
   soldFlats,
   availableFlats,
@@ -82,6 +80,7 @@ export function DashboardMetrics({
       ['Portfolio Physical Inventory', 'Count', 'Status'],
       ['Total Projects', totalProjects, 'Active developments'],
       ['Total Buildings', totalBuildings, 'Across sites'],
+      ['Total Land Owners', totalLandOwners, 'Registered deed holders'],
       ['Total Units / Flats', totalFlats, 'Total inventory'],
       ['Sold Units', soldFlats, `${absorptionRate}% overall absorption`],
       ['Available Units', availableFlats, 'Ready for reservation'],
@@ -113,22 +112,22 @@ export function DashboardMetrics({
 
   return (
     <>
-      {/* ── Section 1: Financial Performance ── */}
-      <div>
-        <div style={{ marginBottom: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div
-            style={{
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-              color: 'var(--color-ink-tertiary)',
-            }}
-          >
-            Realized Revenue &amp; Cash Flow
-          </div>
+      {/* ── Section 1: Financial Performance (Owner vs Employee RBAC) ── */}
+      {isOwner ? (
+        <div>
+          <div style={{ marginBottom: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                color: 'var(--color-ink-tertiary)',
+              }}
+            >
+              Realized Revenue &amp; Cash Flow
+            </div>
 
-          {isOwner && (
             <button
               type="button"
               id="export-pl-header-btn"
@@ -139,101 +138,99 @@ export function DashboardMetrics({
               <Download className="size-3.5 text-muted-foreground" />
               Download P/L Statement
             </button>
-          )}
-        </div>
+          </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Total Sales Value */}
-          <Card style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
-            <CardHeader style={{ padding: '18px 20px 4px' }}>
-              <CardDescription style={{ fontSize: 11.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                Total Sales Value
-              </CardDescription>
-              <CardTitle className="mono" style={{ fontSize: '1.65rem', fontWeight: 700, color: 'var(--color-ink)', marginTop: 4 }}>
-                {formatBDT(totalSalesValue)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent style={{ padding: '0 20px 18px' }}>
-              <p className="text-tiny text-muted" style={{ marginTop: 2 }}>
-                Contracted flat sales across all registered bookings
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Total Collected */}
-          <Card style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
-            <CardHeader style={{ padding: '18px 20px 4px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Total Sales Value */}
+            <Card style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
+              <CardHeader style={{ padding: '18px 20px 4px' }}>
                 <CardDescription style={{ fontSize: 11.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Total Collected
+                  Total Sales Value
                 </CardDescription>
-                <span
-                  style={{
-                    fontSize: 10.5,
-                    fontWeight: 600,
-                    padding: '1px 6px',
-                    borderRadius: 3,
-                    background: 'var(--color-success-bg)',
-                    color: 'var(--color-success)',
-                  }}
-                >
-                  {collectionRate}% Realized
-                </span>
-              </div>
-              <CardTitle className="mono" style={{ fontSize: '1.65rem', fontWeight: 700, color: 'var(--color-success)', marginTop: 4 }}>
-                {formatBDT(totalCollected)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent style={{ padding: '0 20px 18px' }}>
-              <p className="text-tiny text-muted" style={{ marginTop: 2 }}>
-                Actual cash inflows recorded via installment payments
-              </p>
-            </CardContent>
-          </Card>
+                <CardTitle className="mono" style={{ fontSize: '1.65rem', fontWeight: 700, color: 'var(--color-ink)', marginTop: 4 }}>
+                  {formatBDT(totalSalesValue)}
+                </CardTitle>
+              </CardHeader>
+              <CardContent style={{ padding: '0 20px 18px' }}>
+                <p className="text-tiny text-muted" style={{ marginTop: 2 }}>
+                  Contracted flat sales across all registered bookings
+                </p>
+              </CardContent>
+            </Card>
 
-          {/* Total Due */}
-          <Card style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
-            <CardHeader style={{ padding: '18px 20px 4px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <CardDescription style={{ fontSize: 11.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Outstanding Due
-                </CardDescription>
-                {totalDue > 0 && (
+            {/* Total Collected */}
+            <Card style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
+              <CardHeader style={{ padding: '18px 20px 4px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <CardDescription style={{ fontSize: 11.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    Total Collected
+                  </CardDescription>
                   <span
                     style={{
                       fontSize: 10.5,
                       fontWeight: 600,
                       padding: '1px 6px',
                       borderRadius: 3,
-                      background: 'var(--color-warning-bg)',
-                      color: 'var(--color-warning)',
+                      background: 'var(--color-success-bg)',
+                      color: 'var(--color-success)',
                     }}
                   >
-                    Receivable
+                    {collectionRate}% Realized
                   </span>
-                )}
-              </div>
-              <CardTitle
-                className="mono"
-                style={{
-                  fontSize: '1.65rem',
-                  fontWeight: 700,
-                  color: totalDue > 0 ? 'var(--color-warning)' : 'var(--color-ink)',
-                  marginTop: 4,
-                }}
-              >
-                {formatBDT(totalDue)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent style={{ padding: '0 20px 18px' }}>
-              <p className="text-tiny text-muted" style={{ marginTop: 2 }}>
-                Total sales value minus recorded cash inflows
-              </p>
-            </CardContent>
-          </Card>
+                </div>
+                <CardTitle className="mono" style={{ fontSize: '1.65rem', fontWeight: 700, color: 'var(--color-success)', marginTop: 4 }}>
+                  {formatBDT(totalCollected)}
+                </CardTitle>
+              </CardHeader>
+              <CardContent style={{ padding: '0 20px 18px' }}>
+                <p className="text-tiny text-muted" style={{ marginTop: 2 }}>
+                  Actual cash inflows recorded via installment payments
+                </p>
+              </CardContent>
+            </Card>
 
-          {/* Project Profit / Loss — RBAC Controlled */}
-          {isOwner ? (
+            {/* Total Due */}
+            <Card style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
+              <CardHeader style={{ padding: '18px 20px 4px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <CardDescription style={{ fontSize: 11.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    Outstanding Due
+                  </CardDescription>
+                  {totalDue > 0 && (
+                    <span
+                      style={{
+                        fontSize: 10.5,
+                        fontWeight: 600,
+                        padding: '1px 6px',
+                        borderRadius: 3,
+                        background: 'var(--color-warning-bg)',
+                        color: 'var(--color-warning)',
+                      }}
+                    >
+                      Receivable
+                    </span>
+                  )}
+                </div>
+                <CardTitle
+                  className="mono"
+                  style={{
+                    fontSize: '1.65rem',
+                    fontWeight: 700,
+                    color: totalDue > 0 ? 'var(--color-warning)' : 'var(--color-ink)',
+                    marginTop: 4,
+                  }}
+                >
+                  {formatBDT(totalDue)}
+                </CardTitle>
+              </CardHeader>
+              <CardContent style={{ padding: '0 20px 18px' }}>
+                <p className="text-tiny text-muted" style={{ marginTop: 2 }}>
+                  Total sales value minus recorded cash inflows
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Project Profit / Loss */}
             <Card style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
               <CardHeader style={{ padding: '18px 20px 4px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -269,66 +266,70 @@ export function DashboardMetrics({
                 <p className="text-tiny text-muted" style={{ marginTop: 2, marginBottom: 8 }}>
                   Collected ({formatBDT(totalCollected)}) vs Expenses ({formatBDT(totalExpenses)})
                 </p>
-                <div style={{ display: 'flex', gap: 6 }}>
-                  <button
-                    type="button"
-                    id="export-pl-card-btn"
-                    onClick={handleDownloadCSV}
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-foreground bg-muted/60 hover:bg-muted px-2 py-0.5 rounded transition-colors"
-                  >
-                    <Download className="size-3 text-muted-foreground" />
-                    Download P/L Statement
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  id="export-pl-card-btn"
+                  onClick={handleDownloadCSV}
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-foreground bg-muted/60 hover:bg-muted px-2 py-0.5 rounded transition-colors"
+                >
+                  <Download className="size-3 text-muted-foreground" />
+                  Download P/L Statement
+                </button>
               </CardContent>
             </Card>
-          ) : (
-            <Card
-              style={{
-                border: '1px dashed var(--color-border)',
-                background: 'var(--color-surface)',
-                opacity: 0.75,
-              }}
-            >
-              <CardHeader style={{ padding: '18px 20px 4px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <CardDescription style={{ fontSize: 11.5, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    Project Profit / Loss
-                  </CardDescription>
-                  <span
-                    style={{
-                      fontSize: 10,
-                      fontWeight: 600,
-                      padding: '1px 6px',
-                      borderRadius: 3,
-                      background: 'var(--color-border-subtle)',
-                      color: 'var(--color-ink-tertiary)',
-                    }}
-                  >
-                    Confidential
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 10 }}>
-                  <Lock className="size-4 text-muted-foreground" />
-                  <span style={{ fontSize: '1.15rem', fontWeight: 600, color: 'var(--color-ink-tertiary)' }}>
-                    Owner Access Only
-                  </span>
-                </div>
-              </CardHeader>
-              <CardContent style={{ padding: '0 20px 18px' }}>
-                <p className="text-tiny text-muted" style={{ marginTop: 6 }}>
-                  Net surplus and margin calculations are restricted to executive roles.
-                </p>
-              </CardContent>
-            </Card>
-          )}
+          </div>
         </div>
-      </div>
+      ) : (
+        /* Employee Mask: Single clean RBAC notice banner */
+        <div
+          id="employee-rbac-banner"
+          style={{
+            padding: '24px',
+            borderRadius: '12px',
+            border: '1px dashed var(--color-border)',
+            background: 'var(--color-surface)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            gap: 10,
+          }}
+        >
+          <div
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: '50%',
+              background: 'var(--color-border-subtle)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--color-ink-tertiary)',
+            }}
+          >
+            <Lock className="size-4" />
+          </div>
+          <div>
+            <h3 style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--color-ink)', marginBottom: 3 }}>
+              Financial &amp; Profit/Loss Statements are restricted to the Owner role
+            </h3>
+            <p className="text-tiny text-muted" style={{ maxWidth: 440, margin: '0 auto' }}>
+              Sales values, cash collections, expense ledgers, and profit/loss yields are confidential executive metrics.
+              Switch to <strong>Owner</strong> in the sidebar to review live financials.
+            </p>
+          </div>
+          <Badge variant="outline" style={{ fontSize: 10.5, fontWeight: 600 }}>
+            Role: Employee
+          </Badge>
+        </div>
+      )}
 
+      {/* ── Section 2: Physical Asset Inventory (Fully visible to both Owner and Employee) ── */}
       {children}
 
-      {/* ── Section 2: Cost & Expense Tracking — RBAC Controlled ── */}
-      {isOwner ? (
+      {/* ── Section 3: Cost & Expense Tracking (Visible ONLY to Owner) ── */}
+      {isOwner && (
         <div>
           <div style={{ marginBottom: 14, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div
@@ -408,33 +409,6 @@ export function DashboardMetrics({
               </CardContent>
             </Card>
           </div>
-        </div>
-      ) : (
-        <div
-          style={{
-            padding: '16px 20px',
-            borderRadius: 8,
-            border: '1px dashed var(--color-border)',
-            background: 'var(--color-surface)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <Lock className="size-4 text-muted-foreground shrink-0" />
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-ink)' }}>
-                Capital Outlay &amp; Site Expenditure Restricted
-              </div>
-              <div className="text-tiny text-muted" style={{ marginTop: 2 }}>
-                Civil construction expenses and material procurement costs are restricted to Executive Owner role.
-              </div>
-            </div>
-          </div>
-          <Badge variant="outline" style={{ fontSize: 10.5, fontWeight: 600 }}>
-            Role: Employee
-          </Badge>
         </div>
       )}
     </>

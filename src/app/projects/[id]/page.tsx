@@ -168,6 +168,10 @@ export default async function ProjectDetailPage({ params }: Props) {
             <div className="stat-value mono">{totalFlats}</div>
           </div>
           <div className="stat-cell">
+            <div className="stat-label">Land Owners</div>
+            <div className="stat-value mono">{landOwners.length}</div>
+          </div>
+          <div className="stat-cell">
             <div className="stat-label">Available</div>
             <div className="stat-value mono" style={{ color: 'var(--color-success)' }}>{availableFlats}</div>
           </div>
@@ -201,7 +205,8 @@ export default async function ProjectDetailPage({ params }: Props) {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Land Owner</TableHead>
-                    <TableHead>Phone</TableHead>
+                    <TableHead>Phone &amp; NID</TableHead>
+                    <TableHead>Address / Share Details</TableHead>
                     <TableHead>Agreement / Deed</TableHead>
                     <TableHead style={{ textAlign: 'right' }}>Date Recorded</TableHead>
                   </TableRow>
@@ -209,8 +214,23 @@ export default async function ProjectDetailPage({ params }: Props) {
                 <TableBody>
                   {landOwners.map((owner) => (
                     <TableRow key={owner.id}>
-                      <TableCell style={{ fontWeight: 600 }}>{owner.full_name}</TableCell>
-                      <TableCell className="mono">{owner.phone}</TableCell>
+                      <TableCell>
+                        <div style={{ fontWeight: 600 }}>{owner.full_name}</div>
+                        {owner.email && (
+                          <div className="text-tiny text-muted">{owner.email}</div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="mono font-medium">{owner.phone}</div>
+                        {owner.nid && (
+                          <div className="text-tiny text-muted mono">NID: {owner.nid}</div>
+                        )}
+                      </TableCell>
+                      <TableCell style={{ maxWidth: 260 }}>
+                        <div className="text-tiny" style={{ color: owner.address ? 'inherit' : 'var(--color-ink-tertiary)' }}>
+                          {owner.address || '—'}
+                        </div>
+                      </TableCell>
                       <TableCell>
                         {owner.agreement_file_url ? (
                           <a

@@ -33,6 +33,9 @@ create table if not exists land_owners (
   project_id uuid not null references projects(id) on delete cascade,
   full_name text not null,
   phone text not null,
+  nid text,
+  email text,
+  address text,
   agreement_file_url text,
   created_at timestamptz not null default now()
 );

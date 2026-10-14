@@ -33,6 +33,7 @@ export default async function DashboardPage() {
   const [
     { count: projectCount },
     { count: buildingCount },
+    { count: landOwnerCount },
     { count: flatCount },
     { count: soldCount },
     { count: availableCount },
@@ -41,6 +42,7 @@ export default async function DashboardPage() {
   ] = await Promise.all([
     supabase.from('projects').select('*', { count: 'exact', head: true }),
     supabase.from('buildings').select('*', { count: 'exact', head: true }),
+    supabase.from('land_owners').select('*', { count: 'exact', head: true }),
     supabase.from('flats').select('*', { count: 'exact', head: true }),
     supabase.from('flats').select('*', { count: 'exact', head: true }).eq('status', 'Sold'),
     supabase.from('flats').select('*', { count: 'exact', head: true }).eq('status', 'Available'),
@@ -51,6 +53,7 @@ export default async function DashboardPage() {
   // Calculated Core KPIs
   const totalProjects = projectCount ?? 0
   const totalBuildings = buildingCount ?? 0
+  const totalLandOwners = landOwnerCount ?? 0
   const totalFlats = flatCount ?? 0
   const soldFlats = soldCount ?? 0
   const availableFlats = availableCount ?? 0
@@ -117,6 +120,7 @@ export default async function DashboardPage() {
           isProfitable={isProfitable}
           totalProjects={totalProjects}
           totalBuildings={totalBuildings}
+          totalLandOwners={totalLandOwners}
           totalFlats={totalFlats}
           soldFlats={soldFlats}
           availableFlats={availableFlats}
@@ -132,7 +136,7 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {/* Total Projects */}
             <Card style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
               <CardHeader style={{ padding: '16px 18px 2px' }}>
@@ -160,6 +164,23 @@ export default async function DashboardPage() {
               </CardHeader>
               <CardContent style={{ padding: '0 18px 16px' }}>
                 <span className="text-tiny text-muted">Across all project sites</span>
+              </CardContent>
+            </Card>
+
+            {/* Total Land Owners */}
+            <Card style={{ border: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
+              <CardHeader style={{ padding: '16px 18px 2px' }}>
+                <CardDescription style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Land Owners
+                </CardDescription>
+                <CardTitle className="mono" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-ink)', marginTop: 4 }}>
+                  {formatNumber(totalLandOwners)}
+                </CardTitle>
+              </CardHeader>
+              <CardContent style={{ padding: '0 18px 16px' }}>
+                <Link href="/land-owners" className="text-tiny text-muted hover:text-foreground inline-flex items-center gap-1 transition-colors">
+                  Deed holders →
+                </Link>
               </CardContent>
             </Card>
 
@@ -247,6 +268,25 @@ export default async function DashboardPage() {
                 }}
               >
                 <span style={{ fontWeight: 500 }}>Property Management (Projects, Buildings &amp; Flats)</span>
+                <span style={{ color: 'var(--color-ink-tertiary)' }}>→</span>
+              </Link>
+
+              <Link
+                href="/land-owners"
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  fontSize: 13,
+                  color: 'var(--color-ink)',
+                  textDecoration: 'none',
+                  padding: '8px 10px',
+                  borderRadius: 4,
+                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-canvas)',
+                }}
+              >
+                <span style={{ fontWeight: 500 }}>Land Owner Deed &amp; Agreement Registry</span>
                 <span style={{ color: 'var(--color-ink-tertiary)' }}>→</span>
               </Link>
 

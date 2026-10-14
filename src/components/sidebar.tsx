@@ -46,6 +46,16 @@ const NAV = [
           </svg>
         ),
       },
+      {
+        href: '/land-owners',
+        label: 'Land Owners',
+        icon: (
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+            <path d="M7.5 1.5L2 6v7.5h11V6L7.5 1.5Z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M6 13.5V8.5h3v5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        ),
+      },
     ],
   },
   {
@@ -242,15 +252,9 @@ export function MobileHeader() {
       <div className="flex items-center gap-3">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Open navigation menu"
-                className="size-8 -ml-1 text-muted-foreground hover:text-foreground"
-                id="mobile-menu-trigger"
-              />
-            }
+            className="inline-flex items-center justify-center size-8 -ml-1 text-muted-foreground hover:text-foreground rounded-md transition-colors"
+            aria-label="Open navigation menu"
+            id="mobile-menu-trigger"
           >
             <Menu className="size-5" />
           </SheetTrigger>
